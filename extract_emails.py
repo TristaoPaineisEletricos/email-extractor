@@ -45,11 +45,11 @@ def get_text(file_name):
         text = extract_text(file_name)
         full_text = [text]
         with open(file_name, 'rb') as f:
-            reader = PyPDF2.PdfFileReader(f)
-            for pageNumber in range(reader.numPages):
-                page = reader.getPage(pageNumber)
+            reader = PyPDF2.PdfReader(f)
+            for pageNumber in range(len(reader.pages)):
+                page = reader.pages[pageNumber]
                 try:
-                    txt = page.extractText()
+                    txt = page.extract_text()
                     full_text.append(txt)
                 except Exception:
                     print("Error PDF reader ", file_name, pageNumber)
