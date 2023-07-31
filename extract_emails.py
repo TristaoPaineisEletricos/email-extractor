@@ -42,17 +42,24 @@ def get_text(file_name):
             print("File could not be read ", file_name)
             traceback.print_exc()
     elif ext in ["pdf"]:
-        text = extract_text(file_name)
-        full_text = [text]
+        full_text = []
+        # Added a try-except block here
+        try:
+            text = extract_text(file_name)
+            full_text.append(text)
+        except Exception:
+            print("Error extracting text from PDF file ", file_name)
+            traceback.print_exc()
         with open(file_name, 'rb') as f:
             reader = PyPDF2.PdfReader(f)
             for pageNumber in range(len(reader.pages)):
                 page = reader.pages[pageNumber]
+                # Added a try-except block here
                 try:
                     txt = page.extract_text()
                     full_text.append(txt)
                 except Exception:
-                    print("Error PDF reader ", file_name, pageNumber)
+                    print("Error extracting text from PDF page ", file_name, pageNumber)
                     traceback.print_exc()
         return "\n".join(full_text)
     elif ext in ["docx"]:
@@ -128,7 +135,6 @@ def main(args):
             out.write("\n")
     if args.dst is not None:
         out.close()
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Extract emails from file')
